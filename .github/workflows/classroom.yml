@@ -1,0 +1,91 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: file
+      id: file
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: file
+        setup-command: gcc fibonacci.c -lm
+        command: "./a.out file.txt"
+        input: ''
+        expected-output: |-
+          Fibonacci series of 5 terms:
+          0 1 1 2 3
+        comparison-method: exact
+        timeout: 1
+        max-score: 2
+    - name: file2
+      id: file2
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: file2
+        setup-command: gcc fibonacci.c -lm
+        command: "./a.out file2.txt"
+        input: ''
+        expected-output: |-
+          Fibonacci series of 7 terms:
+          0 1 1 2 3 5 8
+        comparison-method: exact
+        timeout: 1
+        max-score: 2
+    - name: file3
+      id: file3
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: file3
+        setup-command: gcc fibonacci.c -lm
+        command: "./a.out file3.txt"
+        input: ''
+        expected-output: |-
+          Fibonacci series of 6 terms:
+          0 1 1 2 3 5
+        comparison-method: exact
+        timeout: 1
+        max-score: 2
+    - name: file4
+      id: file4
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: file4
+        setup-command: ''
+        command: "./a.out file4.txt"
+        input: ''
+        expected-output: 'Error: No valid number (5-10) found in the input file.'
+        comparison-method: exact
+        timeout: 1
+        max-score: 1
+    - name: file5
+      id: file5
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: file5
+        setup-command: gcc fibonacci.c -lm
+        command: "./a.out"
+        input: ''
+        expected-output: 'Error: Could not open input file.'
+        comparison-method: exact
+        timeout: 1
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        FILE_RESULTS: "${{steps.file.outputs.result}}"
+        FILE2_RESULTS: "${{steps.file2.outputs.result}}"
+        FILE3_RESULTS: "${{steps.file3.outputs.result}}"
+        FILE4_RESULTS: "${{steps.file4.outputs.result}}"
+        FILE5_RESULTS: "${{steps.file5.outputs.result}}"
+      with:
+        runners: file,file2,file3,file4,file5
