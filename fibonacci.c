@@ -7,8 +7,10 @@ void generate_fibonacci(int n) {
     printf("Fibonacci series of %d terms:\n", n);
     for (int i = 1; i <= n; ++i) {
         printf("%d ", fib);
-        // add your code here. The fib value will change for each i and print
-        // do not alter any of the printf functions. 
+
+        next = fib + b;
+        fib = b;
+        b = next;
     }
     printf("\n");
 }
